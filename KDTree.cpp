@@ -1,4 +1,5 @@
 #include "KDTree.h"
+#include <limits>
 
 KDTree::KDTree() : root(nullptr) {}
 
@@ -19,7 +20,7 @@ void KDTree::print() {
 }
 
 Point KDTree::findNearestNeighbor(const Point &p) {
-  float dist = MAXFLOAT;
+  float dist = std::numeric_limits<float>::infinity();
   Point best;
   findNearestNeighborCandidateIterative(root, p, dist, best);
   return best;

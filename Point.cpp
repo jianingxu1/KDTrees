@@ -1,4 +1,5 @@
 #include "Point.h"
+#include <cmath>
 
 Point::Point() {}
 
@@ -11,7 +12,7 @@ float Point::distanceTo(const Point &other) const {
   }
 
   float sumOfSquares = 0.0;
-  for (int i = 0; i < coords.size(); ++i) {
+  for (int i = 0; i < (int)coords.size(); ++i) {
     float diff = coords[i] - other.coords[i];
     sumOfSquares += diff * diff;
   }

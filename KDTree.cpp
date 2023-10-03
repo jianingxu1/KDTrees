@@ -18,6 +18,13 @@ void KDTree::print() {
   std::cout << std::endl;
 }
 
+Point KDTree::findNearestNeighbor(const Point &p) {
+  float dist = MAXFLOAT;
+  Point best;
+  findNearestNeighborCandidateIterative(root, p, dist, best);
+  return best;
+}
+
 KDTree::Node::Node(const Point &p, int level)
     : p(p), left(nullptr), right(nullptr), level(level) {}
 
@@ -46,6 +53,22 @@ void KDTree::insertRecursive(Node *node, const Point &p) {
       return;
     }
     insertRecursive(node->right, p);
+  }
+}
+
+void KDTree::findNearestNeighborCandidateIterative(Node *node, const Point &p,
+                                                   float &dist, Point &best) {
+  while (node != nullptr) {
+    float currentDist = p.distanceTo(node->p);
+    if (currentDist < dist) {
+      dist = currentDist;
+      best = node->p;
+    }
+    int discriminant = node->getDiscriminant();
+    if (p.coords[discriminant] < node->p.coords[discriminant])
+      node = node->left;
+    else
+      node = node->right;
   }
 }
 

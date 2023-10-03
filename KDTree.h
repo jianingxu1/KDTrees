@@ -11,6 +11,7 @@ class KDTree {
   KDTree();
   ~KDTree();
   void insert(const Point &p);
+  Point findNearestNeighbor(const Point &p);
   void print();
 
  private:
@@ -26,7 +27,8 @@ class KDTree {
   Node *root;
   void deleteRecursive(Node *node);
   void insertRecursive(Node *node, const Point &p);
-
+  void findNearestNeighborCandidateIterative(Node *node, const Point &p,
+                                             float &dist, Point &best);
   void printNode(Node *node);
 };
 

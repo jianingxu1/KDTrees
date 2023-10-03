@@ -18,3 +18,14 @@ float Point::distanceTo(const Point &other) const {
 
   return std::sqrt(sumOfSquares);
 }
+
+void Point::print() const {
+  std::cout << '(';
+  int n = this->coords.size();
+  for (int i = 0; i < n; ++i) {
+    if (i != n - 1)
+      std::cout << this->coords[i] << ", ";
+    else
+      std::cout << this->coords[i] << ')';
+  }
+}

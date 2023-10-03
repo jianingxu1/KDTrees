@@ -11,6 +11,7 @@ struct Point {
 
   // Function to calculate the Euclidean distance between two points
   float distanceTo(const Point &other) const;
+  void print() const;
 };
 
 #endif  // POINT_H

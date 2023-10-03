@@ -12,7 +12,11 @@ void KDTree::insert(const Point &p) {
   insertRecursive(root, p);
 }
 
-void KDTree::print() { printNode(root); }
+void KDTree::print() {
+  std::cout << "Inorder traversal: ";
+  printNode(root);
+  std::cout << std::endl;
+}
 
 KDTree::Node::Node(const Point &p, int level)
     : p(p), left(nullptr), right(nullptr), level(level) {}
@@ -50,8 +54,7 @@ void KDTree::printNode(Node *node) {
     return;
   }
   printNode(node->left);
-  for (int i = 0; i < static_cast<int>(node->p.coords.size()); i++) {
-    std::cout << node->p.coords[i] << " ";
-  }
+  node->p.print();
+  std::cout << ' ';
   printNode(node->right);
 }

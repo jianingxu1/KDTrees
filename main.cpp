@@ -1,10 +1,10 @@
-#include "kdtree.h"
 #include <iostream>
 #include <vector>
+
+#include "kdtree.h"
 using namespace std;
 
-int main()
-{
+int main() {
   KDTree tree;
   tree.insert(Point({10, 20}));
   tree.insert(Point({5, 30}));

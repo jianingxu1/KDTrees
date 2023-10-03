@@ -4,23 +4,20 @@
 #include <iostream>
 #include <vector>
 
-struct Point
-{
+struct Point {
   std::vector<float> coords;
   Point(const std::vector<float> &coords);
 };
 
-class KDTree
-{
-public:
+class KDTree {
+ public:
   KDTree();
   ~KDTree();
   void insert(const Point &p);
   void print();
 
-private:
-  struct Node
-  {
+ private:
+  struct Node {
     Point p;
     Node *left;
     Node *right;
@@ -35,4 +32,4 @@ private:
   void printNode(Node *node);
 };
 
-#endif // KDTREE_H
+#endif  // KDTREE_H

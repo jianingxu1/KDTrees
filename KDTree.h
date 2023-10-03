@@ -4,10 +4,7 @@
 #include <iostream>
 #include <vector>
 
-struct Point {
-  std::vector<float> coords;
-  Point(const std::vector<float> &coords);
-};
+#include "Point.h"
 
 class KDTree {
  public:
@@ -29,6 +26,7 @@ class KDTree {
   Node *root;
   void deleteRecursive(Node *node);
   void insertRecursive(Node *node, const Point &p);
+
   void printNode(Node *node);
 };
 

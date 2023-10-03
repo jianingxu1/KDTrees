@@ -1,9 +1,5 @@
-#include "kdtree.h"
+#include "KDTree.h"
 
-// Point class implementation
-Point::Point(const std::vector<float> &coords) : coords(coords) {}
-
-// KDTree class implementation
 KDTree::KDTree() : root(nullptr) {}
 
 KDTree::~KDTree() { deleteRecursive(root); }

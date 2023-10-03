@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 
-#include "kdtree.h"
+#include "KDTree.h"
 using namespace std;
 
 int main() {

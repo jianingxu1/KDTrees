@@ -3,9 +3,9 @@ CXX = g++
 CXXFLAGS = -std=c++11 -Wall
 
 # Source files, header files, and object files
-SRCS = main.cpp kdtree.cpp
+SRCS = main.cpp KDTree.cpp Point.cpp
 OBJS = $(SRCS:.cpp=.o)
-HDRS = kdtree.h
+HDRS = KDTree.h
 
 # Output executable
 TARGET = main

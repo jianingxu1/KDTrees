@@ -1,10 +1,20 @@
 #include "KDTree.h"
 
-#include <iostream>
-#include <limits>
-using namespace std;
-
 KDTree::KDTree() : root(nullptr) {}
+
+KDTree::KDTree(int n, int k) {
+  mt19937 gen(time(NULL) + 10);
+  uniform_real_distribution<float> dis(0.0f, 1.0f);
+  root = nullptr;
+  for (int i = 0; i < n; ++i) {
+    vector<float> coords(k);
+    for (int j = 0; j < k; ++j) {
+      coords[j] = dis(gen);
+    }
+    Point p(coords);
+    insert(p);
+  }
+}
 
 KDTree::~KDTree() { deleteRecursive(root); }
 
@@ -22,11 +32,12 @@ void KDTree::print() {
   std::cout << std::endl;
 }
 
-Point KDTree::findNearestNeighbor(const Point &p) {
+Point KDTree::findNearestNeighbor(const Point &p, int &numNodesVisited) {
   float dist = std::numeric_limits<float>::infinity();
   Point best;
   bool hasFoundLeaf = false;
-  findNearestNeighborRecursive(root, p, dist, best, hasFoundLeaf);
+  findNearestNeighborRecursive(root, p, dist, best, hasFoundLeaf,
+                               numNodesVisited);
   return best;
 }
 
@@ -75,39 +86,45 @@ bool KDTree::radiusCrossesLeftBoundingBox(Node *node, const Point &p,
 
 void KDTree::findNearestNeighborRecursive(Node *node, const Point &p,
                                           float &dist, Point &best,
-                                          bool &hasFoundLeaf) {
+                                          bool &hasFoundLeaf,
+                                          int &numNodesVisited) {
   if (node == nullptr) return;
+  ++numNodesVisited;
   float currentDist = p.distanceTo(node->p);
   if (currentDist < dist) {
     dist = currentDist;
     best = node->p;
   }
   int discriminant = node->getDiscriminant();
-  node->p.print();
-
   if (not hasFoundLeaf) {
     if (p.coords[discriminant] < node->p.coords[discriminant]) {
       if (node->left != nullptr)
-        findNearestNeighborRecursive(node->left, p, dist, best, hasFoundLeaf);
+        findNearestNeighborRecursive(node->left, p, dist, best, hasFoundLeaf,
+                                     numNodesVisited);
 
       hasFoundLeaf = true;
       if (radiusCrossesRightBoundingBox(node, p, dist))
-        findNearestNeighborRecursive(node->right, p, dist, best, hasFoundLeaf);
+        findNearestNeighborRecursive(node->right, p, dist, best, hasFoundLeaf,
+                                     numNodesVisited);
 
     } else {
       if (node->right != nullptr)
-        findNearestNeighborRecursive(node->right, p, dist, best, hasFoundLeaf);
+        findNearestNeighborRecursive(node->right, p, dist, best, hasFoundLeaf,
+                                     numNodesVisited);
 
       hasFoundLeaf = true;
       if (radiusCrossesLeftBoundingBox(node, p, dist))
-        findNearestNeighborRecursive(node->left, p, dist, best, hasFoundLeaf);
+        findNearestNeighborRecursive(node->left, p, dist, best, hasFoundLeaf,
+                                     numNodesVisited);
     }
 
   } else {
     if (radiusCrossesLeftBoundingBox(node, p, dist))
-      findNearestNeighborRecursive(node->left, p, dist, best, hasFoundLeaf);
+      findNearestNeighborRecursive(node->left, p, dist, best, hasFoundLeaf,
+                                   numNodesVisited);
     if (radiusCrossesRightBoundingBox(node, p, dist))
-      findNearestNeighborRecursive(node->right, p, dist, best, hasFoundLeaf);
+      findNearestNeighborRecursive(node->right, p, dist, best, hasFoundLeaf,
+                                   numNodesVisited);
   }
 }
 void KDTree::findNearestNeighborCandidateIterative(Node *node, const Point &p,

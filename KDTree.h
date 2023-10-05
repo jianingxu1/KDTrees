@@ -2,16 +2,20 @@
 #define KDTREE_H
 
 #include <iostream>
+#include <limits>
+#include <random>
 #include <vector>
+using namespace std;
 
 #include "Point.h"
 
 class KDTree {
  public:
   KDTree();
+  KDTree(int n, int k);
   ~KDTree();
   void insert(const Point &p);
-  Point findNearestNeighbor(const Point &p);
+  Point findNearestNeighbor(const Point &p, int &numNodesVisited);
   void print();
 
  private:
@@ -30,7 +34,8 @@ class KDTree {
   bool radiusCrossesRightBoundingBox(Node *node, const Point &p, float dist);
   bool radiusCrossesLeftBoundingBox(Node *node, const Point &p, float dist);
   void findNearestNeighborRecursive(Node *node, const Point &p, float &dist,
-                                    Point &best, bool &hasFoundLeaf);
+                                    Point &best, bool &hasFoundLea,
+                                    int &numNodesVisited);
   void findNearestNeighborCandidateIterative(Node *node, const Point &p,
                                              float &dist, Point &best);
   void printNode(Node *node);

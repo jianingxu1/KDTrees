@@ -1,5 +1,8 @@
 #include "KDTree.h"
+
+#include <iostream>
 #include <limits>
+using namespace std;
 
 KDTree::KDTree() : root(nullptr) {}
 
@@ -22,7 +25,8 @@ void KDTree::print() {
 Point KDTree::findNearestNeighbor(const Point &p) {
   float dist = std::numeric_limits<float>::infinity();
   Point best;
-  findNearestNeighborCandidateIterative(root, p, dist, best);
+  bool hasFoundLeaf = false;
+  findNearestNeighborRecursive(root, p, dist, best, hasFoundLeaf);
   return best;
 }
 
@@ -57,6 +61,55 @@ void KDTree::insertRecursive(Node *node, const Point &p) {
   }
 }
 
+bool KDTree::radiusCrossesRightBoundingBox(Node *node, const Point &p,
+                                           float dist) {
+  int discr = node->getDiscriminant();
+  return p.coords[discr] + dist > node->p.coords[discr];
+}
+
+bool KDTree::radiusCrossesLeftBoundingBox(Node *node, const Point &p,
+                                          float dist) {
+  int discr = node->getDiscriminant();
+  return p.coords[discr] - dist < node->p.coords[discr];
+}
+
+void KDTree::findNearestNeighborRecursive(Node *node, const Point &p,
+                                          float &dist, Point &best,
+                                          bool &hasFoundLeaf) {
+  if (node == nullptr) return;
+  float currentDist = p.distanceTo(node->p);
+  if (currentDist < dist) {
+    dist = currentDist;
+    best = node->p;
+  }
+  int discriminant = node->getDiscriminant();
+  node->p.print();
+
+  if (not hasFoundLeaf) {
+    if (p.coords[discriminant] < node->p.coords[discriminant]) {
+      if (node->left != nullptr)
+        findNearestNeighborRecursive(node->left, p, dist, best, hasFoundLeaf);
+
+      hasFoundLeaf = true;
+      if (radiusCrossesRightBoundingBox(node, p, dist))
+        findNearestNeighborRecursive(node->right, p, dist, best, hasFoundLeaf);
+
+    } else {
+      if (node->right != nullptr)
+        findNearestNeighborRecursive(node->right, p, dist, best, hasFoundLeaf);
+
+      hasFoundLeaf = true;
+      if (radiusCrossesLeftBoundingBox(node, p, dist))
+        findNearestNeighborRecursive(node->left, p, dist, best, hasFoundLeaf);
+    }
+
+  } else {
+    if (radiusCrossesLeftBoundingBox(node, p, dist))
+      findNearestNeighborRecursive(node->left, p, dist, best, hasFoundLeaf);
+    if (radiusCrossesRightBoundingBox(node, p, dist))
+      findNearestNeighborRecursive(node->right, p, dist, best, hasFoundLeaf);
+  }
+}
 void KDTree::findNearestNeighborCandidateIterative(Node *node, const Point &p,
                                                    float &dist, Point &best) {
   while (node != nullptr) {

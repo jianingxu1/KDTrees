@@ -3,7 +3,7 @@
 #include <iostream>
 #include <random>
 #include <vector>
-
+#include <cmath>
 #include "KDTree.h"
 using namespace std;
 
@@ -24,27 +24,60 @@ vector<Point> generateQueries(int numQueries, int k) {
   return queries;
 }
 
+int varianza(vector<int>& V, int avg) {
+    int sum_squared_diff = 0;
+    int n = V.size();
+
+    // Calcula la suma de los cuadrados de las diferencias
+    for (int i = 0; i < n; i++) {
+        int diff = V[i] - avg;
+        sum_squared_diff += diff * diff;
+        cout <<V[i] << " ";
+    }
+
+    // Calcula la varianza
+    int variance = sum_squared_diff / (n-1);
+    
+    return variance;
+}
+
+
 int main() {
   int numTrees, numNodes, numQueries, k;
-  cout << "Introduce the number of trees, nodes, queries and dimensions:\n";
-  cin >> numTrees >> numNodes >> numQueries >> k;
+  cout << "Introduce the dimension:\n";
+  numTrees = 1;
+  numNodes = 10000;
+  numQueries = 10;
+  cin >> k;
 
-  vector<Point> queries = generateQueries(numQueries, k);
+  //vector<Point> queries = generateQueries(numQueries, k);
 
-  // Create trees one by one, and execute queries
-  for (int i = 0; i < numTrees; ++i) {
-    // Create tree
-    KDTree tree(numNodes, k);
+  for (int nodes_act = numNodes; nodes_act <= 10000; nodes_act+=10000) {
+    long int avgNodesVisited_per_size = 0;
+    int v = 0; //aqui ire acomulando las varianzas para cada arbol
+    // Create trees one by one, and execute queries
+        vector<Point> queries = generateQueries(numQueries, k); //seria interesante que cambien los arboles y tambien los queries
+    for (int i = 0; i < numTrees; ++i) {
+        // Create tree
+        KDTree tree(nodes_act, k);
+        // Execute queries100
+        int nodesVisited = 0;
+        vector<int> variQ(numQueries,0); //aqui iremos guardando cuantos nodo
+        for (int j = 0; j < numQueries; ++j) {
+          int curNodesVisited = 0;
+          tree.findNearestNeighbor(queries[j], curNodesVisited);
+          nodesVisited += curNodesVisited;
+          variQ[j] = curNodesVisited;
 
-    // Execute queries
-    int nodesVisited = 0;
-    for (int j = 0; j < numQueries; ++j) {
-      int curNodesVisited = 0;
-      tree.findNearestNeighbor(queries[j], curNodesVisited);
-      nodesVisited += curNodesVisited;
-      // cout << curNodesVisited << endl;
+          // cout << curNodesVisited << endl;
+        }
+        avgNodesVisited_per_size += nodesVisited / numQueries; //vas acumulando la suma de medias de todos los arbooles de la mida n actual
+        v += varianza(variQ,avgNodesVisited_per_size);
+
     }
-    int avgNodesVisited = nodesVisited /= numQueries;
-    cout << avgNodesVisited << endl;
+    cout<<avgNodesVisited_per_size/numTrees<<" "; //media de la suma de las medias de los 100 arboles
+    cout<<v/numTrees<<endl; //media de la suma de las medias de los 100 arboles 
+
   }
 }
+

@@ -25,16 +25,19 @@ vector<Point> generateQueries(int numQueries, int k) {
 }
 
 int main() {
-  int numTrees, numNodes, numQueries, k;
-  cout << "Introduce the number of trees, nodes, queries and dimensions:\n";
+  int numTrees, numNodes, numQueries, k,typeOfTree;
+  cout << "Introduce the number of trees, nodes, queries, dimensions:\n";
   cin >> numTrees >> numNodes >> numQueries >> k;
-
+  cout << "Enter the type of KD-Tree:\n 0(Standard)\n 1(Relaxed)\n 2(Squarish)\n";
+  cin >> typeOfTree;
+  cout << endl;
+  
   vector<Point> queries = generateQueries(numQueries, k);
 
   // Create trees one by one, and execute queries
   for (int i = 0; i < numTrees; ++i) {
     // Create tree
-    KDTree tree(numNodes, k);
+    KDTree tree(numNodes, k,typeOfTree);
 
     // Execute queries
     int nodesVisited = 0;

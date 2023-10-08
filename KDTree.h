@@ -12,11 +12,12 @@ using namespace std;
 class KDTree {
  public:
   KDTree();
-  KDTree(int n, int k);
+  KDTree(int n, int k,int tipusA);
   ~KDTree();
   void insert(const Point &p);
   Point findNearestNeighbor(const Point &p, int &numNodesVisited);
   void print();
+  int typeOfTree;//0->Standard 1->Relaxed 2->Squarish
 
  private:
   struct Node {
@@ -25,7 +26,7 @@ class KDTree {
     Node *right;
     int level;
     Node(const Point &p, int level);
-    int getDiscriminant();
+    int getDiscriminant(int typeOfTree,const Point &rootPoint,const Point &p);
   };
 
   Node *root;

@@ -11,31 +11,32 @@ using namespace std;
 
 class KDTree {
  public:
-  KDTree();
-  KDTree(int n, int k,int tipusA);
+  KDTree(int k);
+  KDTree(int n, int k);
   ~KDTree();
-  void insert(const Point &p);
+  virtual void insert(const Point &p);
   Point findNearestNeighbor(const Point &p, int &numNodesVisited);
   void print();
   int typeOfTree;//0->Standard 1->Relaxed 2->Squarish
 
- private:
+ protected:
   struct Node {
     Point p;
     Node *left;
     Node *right;
     int level;
-    Node(const Point &p, int level);
-    int getDiscriminant(int typeOfTree,const Point &rootPoint,const Point &p);
+    int discriminant;
+    Node(const Point &p, int level, int discriminant);
   };
 
   Node *root;
+  int k;
   void deleteRecursive(Node *node);
-  void insertRecursive(Node *node, const Point &p);
+  virtual void insertRecursive(Node *node, const Point &p);
   bool radiusCrossesRightBoundingBox(Node *node, const Point &p, float dist);
   bool radiusCrossesLeftBoundingBox(Node *node, const Point &p, float dist);
   void findNearestNeighborRecursive(Node *node, const Point &p, float &dist,
-                                    Point &best, bool &hasFoundLea,
+                                    Point &best, bool &hasFoundLeaf,
                                     int &numNodesVisited);
   void findNearestNeighborCandidateIterative(Node *node, const Point &p,
                                              float &dist, Point &best);

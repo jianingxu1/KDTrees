@@ -3,9 +3,9 @@ CXX = g++
 CXXFLAGS = -D_GLIBCXX_DEBUG -O2 -Wall -Wextra -Werror -Wno-sign-compare -std=c++11
 
 # Source files, header files, and object files
-SRCS = main.cpp KDTree.cpp Point.cpp
+SRCS = main.cpp KDTree.cpp Point.cpp RelaxedKDTree.cpp SquarishKDTree.cpp
 OBJS = $(SRCS:.cpp=.o)
-HDRS = KDTree.h
+HDRS = KDTree.h Point.h RelaxedKDTree.h SquarishKDTree.h
 
 # Output executable
 TARGET = main

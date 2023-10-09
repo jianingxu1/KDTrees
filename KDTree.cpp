@@ -3,13 +3,16 @@
 KDTree::KDTree() : root(nullptr) {}
 
 KDTree::KDTree(int n, int k) {
-  mt19937 gen(time(NULL) + 10);
-  uniform_real_distribution<float> dis(0.0f, 1.0f);
+  random_device myRandomDevice;
+  unsigned seed = myRandomDevice();
+  uniform_real_distribution<double> Uniform(0.0, 1.0);
+  default_random_engine RNG(seed);
+
   root = nullptr;
   for (int i = 0; i < n; ++i) {
     vector<float> coords(k);
     for (int j = 0; j < k; ++j) {
-      coords[j] = dis(gen);
+      coords[j] = Uniform(RNG);
     }
     Point p(coords);
     insert(p);

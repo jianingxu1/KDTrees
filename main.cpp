@@ -8,15 +8,17 @@
 using namespace std;
 
 // Random uniform number generator between 0 and 1
-mt19937 gen(time(NULL));
-uniform_real_distribution<float> dis(0.0f, 1.0f);
+  random_device myRandomDevice;
+  unsigned seed = myRandomDevice();
+  uniform_real_distribution<double> Uniform(0.0, 1.0);
+  default_random_engine RNG(seed);
 
 vector<Point> generateQueries(int numQueries, int k) {
   vector<Point> queries(numQueries);
   for (int i = 0; i < numQueries; ++i) {
     vector<float> coords(k);
     for (int j = 0; j < k; ++j) {
-      coords[j] = dis(gen);
+      coords[j] = Uniform(RNG);
     }
     Point p(coords);
     queries[i] = p;
@@ -35,7 +37,7 @@ int main() {
   for (int i = 0; i < numTrees; ++i) {
     // Create tree
     KDTree tree(numNodes, k);
-
+    tree.print();
     // Execute queries
     int nodesVisited = 0;
     for (int j = 0; j < numQueries; ++j) {

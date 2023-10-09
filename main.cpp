@@ -5,7 +5,7 @@
 #include <cmath>
 #include "KDTree.h"
 using namespace std;
-//estoy cansado
+//estoy cansado 2
 // Random uniform number generator between 0 and 1
 mt19937 gen(time(NULL));
 uniform_real_distribution<float> dis(0.0f, 1.0f);

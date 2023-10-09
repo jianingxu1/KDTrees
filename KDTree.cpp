@@ -23,7 +23,7 @@ KDTree::~KDTree() { deleteRecursive(root); }
 
 void KDTree::insert(const Point &p) {
   if (root == nullptr) {
-    root = new Node(p, 0);
+    root = new Node(p, 0, 0);
     return;
   }
   insertRecursive(root, p);
@@ -44,10 +44,9 @@ Point KDTree::findNearestNeighbor(const Point &p, int &numNodesVisited) {
   return best;
 }
 
-KDTree::Node::Node(const Point &p, int level)
-    : p(p), left(nullptr), right(nullptr), level(level) {}
+KDTree::Node::Node(const Point &p, int level, int discriminant)
+    : p(p), left(nullptr), right(nullptr), level(level), discriminant(discriminant){}
 
-int KDTree::Node::getDiscriminant() { return level % p.coords.size(); }
 
 void KDTree::deleteRecursive(Node *node) {
   if (node == nullptr) {
@@ -59,16 +58,20 @@ void KDTree::deleteRecursive(Node *node) {
 }
 
 void KDTree::insertRecursive(Node *node, const Point &p) {
-  int discriminant = node->getDiscriminant();
+  int discriminant = node->discriminant;
   if (p.coords[discriminant] < node->p.coords[discriminant]) {
     if (node->left == nullptr) {
-      node->left = new Node(p, node->level + 1);
+      int newLevel = node->level + 1;
+      int newDiscriminant = newLevel % p.coords.size();
+      node->left = new Node(p, newLevel, newDiscriminant);
       return;
     }
     insertRecursive(node->left, p);
   } else {
     if (node->right == nullptr) {
-      node->right = new Node(p, node->level + 1);
+      int newLevel = node->level + 1;
+      int newDiscriminant = newLevel % p.coords.size();
+      node->right = new Node(p, newLevel, newDiscriminant);
       return;
     }
     insertRecursive(node->right, p);
@@ -77,13 +80,13 @@ void KDTree::insertRecursive(Node *node, const Point &p) {
 
 bool KDTree::radiusCrossesRightBoundingBox(Node *node, const Point &p,
                                            float dist) {
-  int discr = node->getDiscriminant();
+  int discr = node->discriminant;
   return p.coords[discr] + dist > node->p.coords[discr];
 }
 
 bool KDTree::radiusCrossesLeftBoundingBox(Node *node, const Point &p,
                                           float dist) {
-  int discr = node->getDiscriminant();
+  int discr = node->discriminant;
   return p.coords[discr] - dist < node->p.coords[discr];
 }
 
@@ -98,7 +101,7 @@ void KDTree::findNearestNeighborRecursive(Node *node, const Point &p,
     dist = currentDist;
     best = node->p;
   }
-  int discriminant = node->getDiscriminant();
+  int discriminant = node->discriminant;
   if (not hasFoundLeaf) {
     if (p.coords[discriminant] < node->p.coords[discriminant]) {
       if (node->left != nullptr)
@@ -138,7 +141,7 @@ void KDTree::findNearestNeighborCandidateIterative(Node *node, const Point &p,
       dist = currentDist;
       best = node->p;
     }
-    int discriminant = node->getDiscriminant();
+    int discriminant = node->discriminant;
     if (p.coords[discriminant] < node->p.coords[discriminant])
       node = node->left;
     else

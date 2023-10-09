@@ -18,14 +18,14 @@ class KDTree {
   Point findNearestNeighbor(const Point &p, int &numNodesVisited);
   void print();
 
- private:
+ protected:
   struct Node {
     Point p;
     Node *left;
     Node *right;
     int level;
-    Node(const Point &p, int level);
-    int getDiscriminant();
+    int discriminant;
+    Node(const Point &p, int level, int discriminant);
   };
 
   Node *root;
@@ -34,7 +34,7 @@ class KDTree {
   bool radiusCrossesRightBoundingBox(Node *node, const Point &p, float dist);
   bool radiusCrossesLeftBoundingBox(Node *node, const Point &p, float dist);
   void findNearestNeighborRecursive(Node *node, const Point &p, float &dist,
-                                    Point &best, bool &hasFoundLea,
+                                    Point &best, bool &hasFoundLeaf,
                                     int &numNodesVisited);
   void findNearestNeighborCandidateIterative(Node *node, const Point &p,
                                              float &dist, Point &best);

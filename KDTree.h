@@ -14,7 +14,7 @@ class KDTree {
   KDTree(int k);
   KDTree(int n, int k);
   ~KDTree();
-  void insert(const Point &p);
+  virtual void insert(const Point &p);
   Point findNearestNeighbor(const Point &p, int &numNodesVisited);
   void print();
 
@@ -31,7 +31,7 @@ class KDTree {
   Node *root;
   int k;
   void deleteRecursive(Node *node);
-  void insertRecursive(Node *node, const Point &p);
+  virtual void insertRecursive(Node *node, const Point &p);
   bool radiusCrossesRightBoundingBox(Node *node, const Point &p, float dist);
   bool radiusCrossesLeftBoundingBox(Node *node, const Point &p, float dist);
   void findNearestNeighborRecursive(Node *node, const Point &p, float &dist,

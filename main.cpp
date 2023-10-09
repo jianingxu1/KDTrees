@@ -1,5 +1,4 @@
 #include <time.h>
-
 #include <iostream>
 #include <random>
 #include <vector>
@@ -43,23 +42,24 @@ int varianza(vector<int>& V, int avg) {
 
 
 int main() {
-  int numTrees, numNodes, numQueries, k;
+  int numTrees, numNodes, numQueries, k,typeOfTree;
+  cout << "Enter the type of KD-Tree:\n 0(Standard)\n 1(Relaxed)\n 2(Squarish)\n";
+  cin >> typeOfTree;
   cout << "Introduce the dimension:\n";
-  numTrees = 1;
+  numTrees = 10;
   numNodes = 10000;
   numQueries = 10;
   cin >> k;
 
-  //vector<Point> queries = generateQueries(numQueries, k);
-
-  for (int nodes_act = numNodes; nodes_act <= 10000; nodes_act+=10000) {
+  
+for (int nodes_act = numNodes; nodes_act <= 10000; nodes_act+=10000) {
     long int avgNodesVisited_per_size = 0;
     int v = 0; //aqui ire acomulando las varianzas para cada arbol
     // Create trees one by one, and execute queries
         vector<Point> queries = generateQueries(numQueries, k); //seria interesante que cambien los arboles y tambien los queries
     for (int i = 0; i < numTrees; ++i) {
         // Create tree
-        KDTree tree(nodes_act, k);
+        KDTree tree(numNodes, k,typeOfTree);
         // Execute queries100
         int nodesVisited = 0;
         vector<int> variQ(numQueries,0); //aqui iremos guardando cuantos nodo
@@ -79,5 +79,5 @@ int main() {
     cout<<v/numTrees<<endl; //media de la suma de las medias de los 100 arboles 
 
   }
-}
 
+}

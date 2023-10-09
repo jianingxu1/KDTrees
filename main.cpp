@@ -31,7 +31,7 @@ int varianza(vector<int>& V, int avg) {
     for (int i = 0; i < n; i++) {
         int diff = V[i] - avg;
         sum_squared_diff += diff * diff;
-        cout <<V[i] << " ";
+        //cout <<V[i] << " ";
     }
 
     // Calcula la varianza
@@ -46,13 +46,13 @@ int main() {
   cout << "Enter the type of KD-Tree:\n 0(Standard)\n 1(Relaxed)\n 2(Squarish)\n";
   cin >> typeOfTree;
   cout << "Introduce the dimension:\n";
-  numTrees = 10;
+  numTrees = 100;
   numNodes = 10000;
-  numQueries = 10;
+  numQueries = 100;
   cin >> k;
 
   
-for (int nodes_act = numNodes; nodes_act <= 10000; nodes_act+=10000) {
+for (int nodes_act = numNodes; nodes_act <= 1000000; nodes_act+=10000) {
     long int avgNodesVisited_per_size = 0;
     int v = 0; //aqui ire acomulando las varianzas para cada arbol
     // Create trees one by one, and execute queries

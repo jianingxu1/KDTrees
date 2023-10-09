@@ -11,7 +11,7 @@ using namespace std;
 
 class KDTree {
  public:
-  KDTree();
+  KDTree(int k);
   KDTree(int n, int k);
   ~KDTree();
   void insert(const Point &p);
@@ -29,6 +29,7 @@ class KDTree {
   };
 
   Node *root;
+  int k;
   void deleteRecursive(Node *node);
   void insertRecursive(Node *node, const Point &p);
   bool radiusCrossesRightBoundingBox(Node *node, const Point &p, float dist);

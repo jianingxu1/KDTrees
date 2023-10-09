@@ -1,6 +1,6 @@
 #include "KDTree.h"
 
-KDTree::KDTree() : root(nullptr) {}
+KDTree::KDTree(int k) : root(nullptr), k(k) {}
 
 KDTree::KDTree(int n, int k) {
   random_device myRandomDevice;
@@ -9,6 +9,7 @@ KDTree::KDTree(int n, int k) {
   default_random_engine RNG(seed);
 
   root = nullptr;
+  this->k = k;
   for (int i = 0; i < n; ++i) {
     vector<float> coords(k);
     for (int j = 0; j < k; ++j) {
@@ -62,7 +63,7 @@ void KDTree::insertRecursive(Node *node, const Point &p) {
   if (p.coords[discriminant] < node->p.coords[discriminant]) {
     if (node->left == nullptr) {
       int newLevel = node->level + 1;
-      int newDiscriminant = newLevel % p.coords.size();
+      int newDiscriminant = newLevel % this->k;
       node->left = new Node(p, newLevel, newDiscriminant);
       return;
     }
@@ -70,7 +71,7 @@ void KDTree::insertRecursive(Node *node, const Point &p) {
   } else {
     if (node->right == nullptr) {
       int newLevel = node->level + 1;
-      int newDiscriminant = newLevel % p.coords.size();
+      int newDiscriminant = newLevel % this->k;
       node->right = new Node(p, newLevel, newDiscriminant);
       return;
     }

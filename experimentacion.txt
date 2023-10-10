@@ -1,0 +1,30 @@
+N <= 10M, because the execution with 100M takes too much time and > 8GB of memory.
+K = {2, 3, 5}
+Q = 10000
+T = 30 because for one Tree of 10M nodes it takes 15 seg. (30 T aprox 9 min)
+
+
+
+for each K {
+  for each Type of Tree {
+    generateFile(K,Type) 
+    for(i = 1M; i <= 10M; ++1M) {
+      cout << i <<  ' ';
+      for(j = 0; j < T; ++j) {
+        oneTreeAvgNodesVisited = 0
+        for(t = 0; t < Q; ++t) {
+          oneTreeAvgNodesVisited += curNodesVisited
+        }
+        oneTreeAvgNodesVisited /= Q
+        cout << oneTreeAvgNodesVisited << ' ';
+      }
+
+      cout << endl;
+    }
+
+
+  }
+}
+
+
+          

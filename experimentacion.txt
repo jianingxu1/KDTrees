@@ -26,5 +26,11 @@ for each K {
   }
 }
 
+Ha de ser un model aleatori
+si K es mes gran mes precis es el valor que hem de trobar 
 
-          
+Estudiar, com es comporta el comportament del cost quan es creix K
+Numero de n;
+1000<=n <=100.000 o 50.000 pero com mes gran sigui el número millor.  Cuando la n es muy grande lo mas probable que la funcion sea lineal
+menys de 1000 es petit,fins i tot 1000 no es un numero molt gran n^(x) x es asimptotic
+salts de 5000 o 2000

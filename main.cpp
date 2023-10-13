@@ -33,6 +33,7 @@ int main() {
   int numTrees, numNodes, numQueries, k;
   cout << "Enter the number of dimensions for the tree: \n";
   cin >> k;
+  vector<string> typeTree = {"Standard","Relaxed","Squarish"};
 
   string filename="dimensionK"+to_string(k)+".csv"; 
   ofstream outputFile(filename);
@@ -44,15 +45,17 @@ int main() {
 
   outputFile << "Dimension: "<< k << endl;
 
-  numTrees = 30;
-  numNodes = 1000000;
+  numTrees = 10;
+  numNodes = 1000;
   numQueries = 10000;  
 
   for(int typeOfTree = 0; typeOfTree < 3; ++typeOfTree){ //For que pasa por los 3 tipos de arboles
+    
+    outputFile << typeTree[typeOfTree] << endl;
 
-    for (int n = numNodes; n <= 10000000; n+=1000000) { //For que itera por diferentes tamaños de arboles
+    for (int n = numNodes; n <= 1000000; n+=2000) { //For que itera por diferentes tamaños de arboles
 
-      outputFile << "Number of Nodes: "<<n << ' ';
+      outputFile << "Number of Nodes: "<<n << " Means: ";
 
       // Queremos utilizar las mismas queries para todos los arboles de
       // una misma mida para disminuir la varianza

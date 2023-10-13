@@ -53,7 +53,7 @@ int main() {
     
     outputFile << typeTree[typeOfTree] << endl;
 
-    for (int n = numNodes; n <= 1000000; n+=2000) { //For que itera por diferentes tamaños de arboles
+    for (int n = numNodes; n <= 500000; n+=2000) { //For que itera por diferentes tamaños de arboles
 
       outputFile << "Number of Nodes: "<<n << " Means: ";
 

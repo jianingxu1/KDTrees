@@ -75,12 +75,33 @@ int main() {
     for (int i = 0; i < numTrees; ++i) { //For que crea T arboles y hace la cerca de Q queries
       //La creacion de los arboles dependen de que tipo de arbol estamos tratando
       float avgNodesVisitedForOneTree = 0;
-              
-      KDTree tree(n, k);
-      for (int j = 0; j < numQueries; ++j) {
-        int curNodesVisited = 0;
-        tree.findNearestNeighbor(queries[j], curNodesVisited);
-        avgNodesVisitedForOneTree += curNodesVisited;
+      if (typeOfTree == 0) {
+        KDTree tree(n, k);
+        for (int j = 0; j < numQueries; ++j) {
+          int curNodesVisited = 0;
+          tree.findNearestNeighbor(queries[j], curNodesVisited);
+          avgNodesVisitedForOneTree += curNodesVisited;
+        }
+      }
+      else if (typeOfTree == 1) {
+        RelaxedKDTree tree(n, k);
+        for (int j = 0; j < numQueries; ++j) {
+          int curNodesVisited = 0;
+          tree.findNearestNeighbor(queries[j], curNodesVisited);
+          avgNodesVisitedForOneTree += curNodesVisited;
+        }
+      }
+      else if (typeOfTree == 2) {
+        SquarishKDTree tree(n, k);
+        for (int j = 0; j < numQueries; ++j) {
+          int curNodesVisited = 0;
+          tree.findNearestNeighbor(queries[j], curNodesVisited);
+          avgNodesVisitedForOneTree += curNodesVisited;
+        }
+      }
+      else {
+        cerr << "Wrong type of tree\n";
+        return;
       }
       
       //Para cada arbol tratado, queremos saber la media de nodos visitados en los Q queries

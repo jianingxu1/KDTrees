@@ -29,13 +29,28 @@ vector<Point> generateQueries(int numQueries, int k) {
   return queries;
 }
 
-int main() {
-  int numTrees, numNodes, numQueries, k;
-  cout << "Enter the number of dimensions for the tree: \n";
-  cin >> k;
-  vector<string> typeTree = {"Standard","Relaxed","Squarish"};
+float varianza(vector<float>& V, float avg) {
+  float sum_squared_diff = 0;
+  int n = V.size();
+  // Calcula la suma de los cuadrados de las diferencias
+  for (int i = 0; i < n; i++) {
+    float diff = V[i] - avg;
+    sum_squared_diff += diff * diff;
+  }
+  // Calcula la varianza
+  float variance = sum_squared_diff / (float) (n - 1);
 
-  string filename="dimensionK"+to_string(k)+".csv"; 
+  return variance;
+}
+
+int main() {
+  int k, typeOfTree;
+  cout << "Enter type of tree [0 Stand, 1 Rel, 2 Squa] and k \n";
+  cin >> typeOfTree >> k;
+
+  vector<string> typeTree = { "Standard", "Relaxed", "Squarish" };
+
+  string filename = typeTree[typeOfTree] + "K" + to_string(k) + ".csv"; 
   ofstream outputFile(filename);
 
   if (!outputFile) {
@@ -43,72 +58,68 @@ int main() {
     return 1;
   }
 
-  outputFile << "Dimension: "<< k << endl;
-
-  numTrees = 200;
-  numNodes = 1000;
-  numQueries = 10000;  
-
-  for(int typeOfTree = 0; typeOfTree < 3; ++typeOfTree){ //For que pasa por los 3 tipos de arboles
+  int numTrees = 100;
+  int numNodes = 2000;
+  int numQueries = 10000;  
     
-    outputFile << typeTree[typeOfTree] << endl;
+  outputFile << "Type, K, N, Mean, Variance\n";
+  
+  for (int n = numNodes; n <= 100000; n+=2000) {
+    // Queremos utilizar las mismas queries para todos los arboles de
+    // una misma mida para disminuir la varianza
+    vector<Point> queries = generateQueries(numQueries, k);
+    float avgNodesVisitedForAllTrees = 0;
 
-    for (int n = numNodes; n <= 200000; n+=2000) { //For que itera por diferentes tamaños de arboles
-
-      outputFile << "Number of Nodes: "<<n << " Means: ";
-
-      // Queremos utilizar las mismas queries para todos los arboles de
-      // una misma mida para disminuir la varianza
-      vector<Point> queries = generateQueries(numQueries, k);
-
-      for (int i = 0; i < numTrees; ++i) { //For que crea T arboles y hace la cerca de Q queries
+    vector<float> meanForTree(numTrees, 0);
+    
+    for (int i = 0; i < numTrees; ++i) { //For que crea T arboles y hace la cerca de Q queries
       //La creacion de los arboles dependen de que tipo de arbol estamos tratando
-        int nodesVisited = 0;
-        int avgNodesVisited_per_size = 0;
-                
-        switch(typeOfTree){
-          case 0: {
-            KDTree tree(n, k);
-            for (int j = 0; j < numQueries; ++j) {
-              int curNodesVisited = 0;
-              tree.findNearestNeighbor(queries[j], curNodesVisited);
-              nodesVisited += curNodesVisited;
-            }
-            break;
-          }
-          case 1: {
-            RelaxedKDTree tree(n, k);
-            for (int j = 0; j < numQueries; ++j) {
-              int curNodesVisited = 0;
-              tree.findNearestNeighbor(queries[j], curNodesVisited);
-              nodesVisited += curNodesVisited;
-            }
-            break;
-          }
-          case 2: {
-            SquarishKDTree tree(n, k);
-            for (int j = 0; j < numQueries; ++j) {
-              int curNodesVisited = 0;
-              tree.findNearestNeighbor(queries[j], curNodesVisited);
-              nodesVisited += curNodesVisited;
-            }
-            break;
-          }
-          default:{
-            cerr << "Error: type of tree not valid" << endl;
-            return 0;
-          }
-        }
-        //Para cada arbol tratado, queremos saber la media de nodos visitados en los Q queries
-        //Esto lo usaremos para calcular la MEDIA de medias de los T arboles y para
-        avgNodesVisited_per_size = nodesVisited / numQueries;
-        outputFile << avgNodesVisited_per_size << ' ';
+      float avgNodesVisitedForOneTree = 0;
+              
+      KDTree tree(n, k);
+      for (int j = 0; j < numQueries; ++j) {
+        int curNodesVisited = 0;
+        tree.findNearestNeighbor(queries[j], curNodesVisited);
+        avgNodesVisitedForOneTree += curNodesVisited;
       }
-        //Delimita las diferentes midas que van a tener los arboles
-        outputFile << endl;
+      
+      //Para cada arbol tratado, queremos saber la media de nodos visitados en los Q queries
+      //Esto lo usaremos para calcular la MEDIA de medias de los T arboles y para
+      avgNodesVisitedForOneTree /= (float) numQueries; 
+      
+      avgNodesVisitedForAllTrees += avgNodesVisitedForOneTree;
+      
+      meanForTree[i] = avgNodesVisitedForOneTree;
+      
     }
-    //Delimita los diferentes tipos de arboles implementados
-    outputFile << endl;
+    //Delimita las diferentes midas que van a tener los arboles
+    avgNodesVisitedForAllTrees /= (float) numTrees;
+        
+    outputFile << typeTree[typeOfTree] <<','<< k <<',' << numNodes <<',' << avgNodesVisitedForAllTrees  << ',' << sqrt(varianza(meanForTree, avgNodesVisitedForAllTrees)) << endl;
   }
+ //Delimita los diferentes tipos de arboles implementados
   outputFile.close();
 }
+
+
+/* 
+
+  for numNodes=2000 to 100000
+
+    avgNodesAllTrees = 0
+    meanForTree[numTrees] = []
+    for numTrees=1 to 100
+
+
+      avgNodes = 0
+      for numQueries=1 to 1000
+        avgNodes += currentNodes
+      avgNodes /= numQueries
+      meanForTree[numTrees] = avgNodes
+      avgNodesAllTrees += avgNodes
+
+
+    avgNodesAllTrees /= numTrees
+    cout << avgNodes ... << varianza
+
+*/

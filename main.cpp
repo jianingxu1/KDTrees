@@ -50,7 +50,7 @@ int main() {
 
   vector<string> typeTree = { "Standard", "Relaxed", "Squarish" };
 
-  string filename = typeTree[typeOfTree] + "K" + to_string(k) + ".csv"; 
+  string filename = "data/" + typeTree[typeOfTree] + "K" + to_string(k) + ".csv"; 
   ofstream outputFile(filename);
 
   if (!outputFile) {
@@ -64,7 +64,7 @@ int main() {
     
   outputFile << "Type, K, N, Mean, Variance\n";
   
-  for (int n = numNodes; n <= 100000; n+=2000) {
+  for (int n = numNodes; n <= 10000; n+=2000) {
     // Queremos utilizar las mismas queries para todos los arboles de
     // una misma mida para disminuir la varianza
     vector<Point> queries = generateQueries(numQueries, k);
@@ -116,7 +116,7 @@ int main() {
     //Delimita las diferentes midas que van a tener los arboles
     avgNodesVisitedForAllTrees /= (float) numTrees;
         
-    outputFile << typeTree[typeOfTree] <<','<< k <<',' << numNodes <<',' << avgNodesVisitedForAllTrees  << ',' << sqrt(varianza(meanForTree, avgNodesVisitedForAllTrees)) << endl;
+    outputFile << typeTree[typeOfTree] <<','<< k <<',' << n <<',' << avgNodesVisitedForAllTrees  << ',' << sqrt(varianza(meanForTree, avgNodesVisitedForAllTrees)) << endl;
   }
  //Delimita los diferentes tipos de arboles implementados
   outputFile.close();

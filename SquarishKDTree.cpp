@@ -2,7 +2,23 @@
 
 SquarishKDTree::SquarishKDTree(int k) : KDTree(k) {}
 
-SquarishKDTree::SquarishKDTree(int n, int k) : KDTree(n, k) {}
+SquarishKDTree::SquarishKDTree(int n, int k) : KDTree(k) {
+  random_device myRandomDevice;
+  unsigned seed = myRandomDevice();
+  uniform_real_distribution<double> Uniform(0.0, 1.0);
+  default_random_engine RNG(seed);
+
+  root = nullptr;
+  this->k = k;
+  for (int i = 0; i < n; ++i) {
+    vector<float> coords(k);
+    for (int j = 0; j < k; ++j) {
+      coords[j] = Uniform(RNG);
+    }
+    Point p(coords);
+    insert(p);
+  }
+}
 
 void SquarishKDTree::insert(const Point &p) {
   vector<pair<double, double>> boundingBox(k, pair<double, double>(0.0, 1.0));

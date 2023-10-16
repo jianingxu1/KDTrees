@@ -7,12 +7,27 @@ RelaxedKDTree::RelaxedKDTree(int k) : KDTree(k) {
   this->RNG = default_random_engine(seed);
 }
 
-RelaxedKDTree::RelaxedKDTree(int n, int k) : KDTree(n, k) {
+RelaxedKDTree::RelaxedKDTree(int n, int k) : KDTree(k) {
   random_device myRandomDevice;
   unsigned seed = myRandomDevice();
   this->Uniform = uniform_int_distribution<int>(0, k - 1);
   this->RNG = default_random_engine(seed);
+
+  uniform_real_distribution<double> Uni(0.0, 1.0);
+  default_random_engine Random(seed);
+
+  root = nullptr;
+  this->k = k;
+  for (int i = 0; i < n; ++i) {
+    vector<float> coords(k);
+    for (int j = 0; j < k; ++j) {
+      coords[j] = Uni(Random);
+    }
+    Point p(coords);
+    insert(p);
+  }
 }
+
 void RelaxedKDTree::insert(const Point &p) {
   if (root == nullptr) {
     root = new Node(p, 0, getRandomDiscriminant());

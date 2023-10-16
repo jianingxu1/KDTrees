@@ -101,7 +101,7 @@ int main() {
       }
       else {
         cerr << "Wrong type of tree\n";
-        return;
+        return 1;
       }
       
       //Para cada arbol tratado, queremos saber la media de nodos visitados en los Q queries

@@ -53,44 +53,23 @@ void SquarishKDTree::insertRecursiveBb(
   }
 }
 
-int SquarishKDTree::getMaxDimensionDiscriminant(const vector<pair<double, double>> &boundingBox) {
-  vector<int> dimensionLength(k);
-
-  int maxDimension = 0;
-  for (int i = 0; i < k; ++i) {
-    dimensionLength[i] = boundingBox[i].second - boundingBox[i].first;
-    if (dimensionLength[i] > dimensionLength[maxDimension]) maxDimension = i;
-  }
-  return maxDimension;
-}
-
 int SquarishKDTree::getBestDiscriminant(const Point &p, const vector<pair<double, double>> &boundingBox) {
-  vector<double> dimensionLength(k);
-  for (int i = 0; i < k; ++i) {
-    dimensionLength[i] = boundingBox[i].second - boundingBox[i].first;
+  int dimension = -1;
+  double maxSideLength = -1.0;
+
+  // Iterate through each dimension
+  for (int i = 0; i < boundingBox.size(); i++) {
+      double sideLength = boundingBox[i].second - boundingBox[i].first;
+
+      // Calculate the distance of the point to the midpoint of the current dimension
+      double midpoint = (boundingBox[i].first + boundingBox[i].second) / 2.0;
+      double distanceToMidpoint = abs(p.coords[i] - midpoint);
+
+      // Update the dimension if the side length is the longest so far
+      if (sideLength > maxSideLength && distanceToMidpoint <= sideLength / 2.0) {
+          maxSideLength = sideLength;
+          dimension = i;
+      }
   }
-  vector<double> prefixMult(k);
-  prefixMult[0] = 1;
-  for (int i = 1; i < k; ++i) {
-    prefixMult[i] = prefixMult[i - 1] * dimensionLength[i - 1];
-  }
-  vector<double> suffixMult(k);
-  suffixMult[k - 1] = 1;
-  for (int i = k - 2; i >= 0; --i) {
-    suffixMult[i] = suffixMult[i + 1] * dimensionLength[i + 1];
-  }
-  vector<double> maxNewBb(k);
-  for (int i = 0; i < k; ++i) {
-    maxNewBb[i] = max(p.coords[i] - boundingBox[i].first,
-                      boundingBox[i].second - p.coords[i]);
-  }
-  int bestDiscriminant = 0;
-  for (int i = 1; i < k; ++i) {
-    if (maxNewBb[i] * prefixMult[i] * suffixMult[i] <
-        maxNewBb[bestDiscriminant] * prefixMult[bestDiscriminant] *
-            suffixMult[bestDiscriminant]) {
-      bestDiscriminant = i;
-    }
-  }
-  return bestDiscriminant;
+  return dimension; 
 }

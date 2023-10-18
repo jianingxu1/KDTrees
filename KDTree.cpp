@@ -103,14 +103,12 @@ void KDTree::findNearestNeighborRecursive(Node *node, const Point &p,
   bool shouldVisitLeft = p.coords[discriminant] < node->p.coords[discriminant];
 
   if (shouldVisitLeft) {
-    if (node->left != nullptr)
-      findNearestNeighborRecursive(node->left, p, dist, best, numNodesVisited);
+    findNearestNeighborRecursive(node->left, p, dist, best, numNodesVisited);
     if (radiusCrossesRightBoundingBox(node, p, dist))
       findNearestNeighborRecursive(node->right, p, dist, best, numNodesVisited);
   }
   else {
-    if (node->right != nullptr)
-      findNearestNeighborRecursive(node->right, p, dist, best, numNodesVisited);
+    findNearestNeighborRecursive(node->right, p, dist, best, numNodesVisited);
     if (radiusCrossesLeftBoundingBox(node, p, dist))
       findNearestNeighborRecursive(node->left, p, dist, best, numNodesVisited);
   }

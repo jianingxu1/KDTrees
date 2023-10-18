@@ -64,10 +64,10 @@ int main() {
     
   outputFile << "Type, K, N, Mean, Variance\n";
   
+  vector<Point> queries = generateQueries(numQueries, k);
   for (int n = numNodes; n <= 100000; n+=2000) {
     // Queremos utilizar las mismas queries para todos los arboles de
     // una misma mida para disminuir la varianza
-    vector<Point> queries = generateQueries(numQueries, k);
     float avgNodesVisitedForAllTrees = 0;
 
     vector<float> meanForTree(numTrees, 0);

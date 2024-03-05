@@ -1,4 +1,4 @@
-# KDTrees
+# K-Dimensional Trees
 This program implements the K-dimensional Trees data structure using C++. It features the Standard, Relaxed and Squarish variations, being the latter one the most efficient in queries.
 
 It offers the following functionalities:
